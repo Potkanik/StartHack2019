@@ -1,0 +1,24 @@
+entity History {
+Cup Cup ,
+Action CupAction ,
+Date ZonedDateTime
+}
+
+enum CupAction{
+Created, Taken, Returned, Lost
+}
+
+enum CupStatus{
+InStore, InUse, Recycled, Lost
+}
+
+entity Cup {
+QrCode String,
+Status CupStatus,
+History String
+} 
+
+service all with serviceImpl
+paginate * with infinite-scroll
+
+dto * with mapstruct

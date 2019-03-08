@@ -1,0 +1,11 @@
+version: '2'
+services:
+    starthack2019-postgresql:
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/StartHack2019/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=StartHack2019
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432
