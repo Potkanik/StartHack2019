@@ -4,6 +4,7 @@ import ch.start.hack.StartHack2019App;
 import ch.start.hack.domain.Authority;
 import ch.start.hack.domain.User;
 import ch.start.hack.repository.CupRepository;
+import ch.start.hack.repository.HistoryRepository;
 import ch.start.hack.repository.UserRepository;
 import ch.start.hack.security.AuthoritiesConstants;
 import ch.start.hack.service.MailService;
@@ -29,11 +30,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -106,9 +110,12 @@ public class UserResourceIntTest {
     @Autowired
     private CupMapper cupMapper;
 
+    @Autowired
+    private HistoryRepository historyRepository;
+
     @Before
     public void setup() {
-        UserResource userResource = new UserResource(userService, cupResource, cupRepository, userRepository, mailService, cupMapper, userMapper);
+        UserResource userResource = new UserResource(userService, cupResource, cupRepository, userRepository, historyRepository, mailService, cupMapper, userMapper);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

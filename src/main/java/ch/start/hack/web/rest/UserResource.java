@@ -6,9 +6,9 @@ import ch.start.hack.domain.User;
 import ch.start.hack.domain.enumeration.CupStatus;
 import ch.start.hack.domain.pojo.CupRequest;
 import ch.start.hack.repository.CupRepository;
+import ch.start.hack.repository.HistoryRepository;
 import ch.start.hack.repository.UserRepository;
 import ch.start.hack.security.AuthoritiesConstants;
-import ch.start.hack.service.CupService;
 import ch.start.hack.service.MailService;
 import ch.start.hack.service.UserService;
 import ch.start.hack.service.dto.CupDTO;
@@ -22,7 +22,6 @@ import ch.start.hack.web.rest.util.HeaderUtil;
 import ch.start.hack.web.rest.util.PaginationUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,7 +35,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -76,17 +76,22 @@ public class UserResource {
 
     private final UserRepository userRepository;
 
+    private final HistoryRepository historyRepository;
+
     private final MailService mailService;
 
     private final CupMapper cupMapper;
 
     private final UserMapper userMapper;
 
-    public UserResource(UserService userService, CupResource cupResource, CupRepository cupRepository, UserRepository userRepository, MailService mailService, CupMapper cupMapper, UserMapper userMapper) {
+    private final Integer coffePrice = 2;
+
+    public UserResource(UserService userService, CupResource cupResource, CupRepository cupRepository, UserRepository userRepository, HistoryRepository historyRepository, MailService mailService, CupMapper cupMapper, UserMapper userMapper) {
         this.userService = userService;
         this.cupResource = cupResource;
         this.cupRepository = cupRepository;
         this.userRepository = userRepository;
+        this.historyRepository = historyRepository;
         this.mailService = mailService;
         this.cupMapper = cupMapper;
         this.userMapper = userMapper;
@@ -122,6 +127,12 @@ public class UserResource {
                 CupDTO cupDto = cupResource.createCup(cupMapper.toDto(newCup)).getBody();
 //                user.get().getCups().add(cupMapper.toEntity(cupDto));
 //                updateUser(userMapper.userToUserDTO(user.get()));
+
+                user.get().setMoney(user.get().getMoney() - coffePrice);
+
+                // TODO: Create event to frontend
+
+                userRepository.save(user.get());
 
                 return ResponseEntity.created(new URI("/api/users/buy-cup:" + cupDto.getQrCode()))
                     .body(cupMapper.toEntity(cupDto));
@@ -190,6 +201,30 @@ public class UserResource {
         log.debug("REST request to return Cap : {}", cupRequest);
 
         Optional<Cup> cup = cupRepository.findCupByQrCode(cupRequest.getCupHash());
+
+        Optional<User> user;
+
+        if (cupRequest.getUserLogin() != null) {
+            user = userRepository.findOneByLogin(cup.get().getUserCup().getLogin());
+
+            if (!user.get().getLogin().equals(cupRequest.getUserLogin())) {
+                User foreignUser = userRepository.findOneByLogin(cupRequest.getUserLogin()).get();
+                foreignUser.increaseMoney(1);
+                user.get().decreaseMoney(1);
+
+                userRepository.save(foreignUser);
+                userRepository.save(user.get());
+
+                // TODO: Create event to FE
+
+            }
+
+        }
+//        else {
+//            user = userRepository.findById(cup.get().getUserCup().getId());
+//        }
+
+
 
         if (cup.isPresent()) {
             cup.get().setStatus(CupStatus.Recycled);
