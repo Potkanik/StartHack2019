@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.uiThread
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -90,13 +91,13 @@ class MainActivity : AppCompatActivity() {
         if(Mytv.tvresult!!.text.equals(DEFAULT_FIELD)){
             longToast("Please scan a cup first")
         } else {
-
             val local_hash = Mytv.tvresult!!.text
+            val user: String = Integer.toHexString(Arrays.hashCode(intent!!.getByteArrayExtra(NfcAdapter.EXTRA_ID)))
             longToast("Sending information...")
             doAsync {
                 val postRet = post(
                         "http://130.82.238.197:8080/api/users/buy-cup",
-                        json = (mapOf("userLogin" to "user", "cupHash" to local_hash)))
+                        json = (mapOf("userLogin" to user, "cupHash" to local_hash)))
                 uiThread {
                     logMessage("POST", postRet.text)
                     Mytv.tvresult!!.text = DEFAULT_FIELD

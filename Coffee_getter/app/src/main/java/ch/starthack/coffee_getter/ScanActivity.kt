@@ -88,7 +88,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     override fun onNewIntent(intent: Intent?) {
         mScannerView!!.stopCamera()
         super.onNewIntent(intent)
-        idScanned = "user"
+        idScanned = Integer.toHexString(Arrays.hashCode(intent!!.getByteArrayExtra(NfcAdapter.EXTRA_ID)))
         timeScanned = Date()
         beeper.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200)
         longToast("Credits will go to $idScanned for 30 seconds")
