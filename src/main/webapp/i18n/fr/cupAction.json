@@ -5,6 +5,7 @@
             "Created": "Created",
             "Taken": "Taken",
             "Returned": "Returned",
+            "InStore": "InStore",
             "Lost": "Lost"
         }
     }

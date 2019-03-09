@@ -33,10 +33,11 @@ public class Cup implements Serializable {
     @Column(name = "status")
     private CupStatus status;
 
-    @OneToMany(mappedBy = "kup")
+    @OneToMany(mappedBy = "kup", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<History> histories = new HashSet<>();
+
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnore
     private User userCup;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

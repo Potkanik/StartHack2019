@@ -3,11 +3,13 @@ package ch.start.hack.web.rest;
 import ch.start.hack.StartHack2019App;
 import ch.start.hack.domain.Authority;
 import ch.start.hack.domain.User;
+import ch.start.hack.repository.CupRepository;
 import ch.start.hack.repository.UserRepository;
 import ch.start.hack.security.AuthoritiesConstants;
 import ch.start.hack.service.MailService;
 import ch.start.hack.service.UserService;
 import ch.start.hack.service.dto.UserDTO;
+import ch.start.hack.service.mapper.CupMapper;
 import ch.start.hack.service.mapper.UserMapper;
 import ch.start.hack.web.rest.errors.ExceptionTranslator;
 import ch.start.hack.web.rest.vm.ManagedUserVM;
@@ -95,9 +97,18 @@ public class UserResourceIntTest {
 
     private User user;
 
+    @Autowired
+    private CupResource cupResource;
+
+    @Autowired
+    private CupRepository cupRepository;
+
+    @Autowired
+    private CupMapper cupMapper;
+
     @Before
     public void setup() {
-        UserResource userResource = new UserResource(userService, userRepository, mailService);
+        UserResource userResource = new UserResource(userService, cupResource, cupRepository, userRepository, mailService, cupMapper, userMapper);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -108,7 +119,7 @@ public class UserResourceIntTest {
 
     /**
      * Create a User.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */

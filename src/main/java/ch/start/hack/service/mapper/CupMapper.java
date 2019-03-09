@@ -15,7 +15,7 @@ public interface CupMapper extends EntityMapper<CupDTO, Cup> {
     @Mapping(source = "userCup.login", target = "userCupLogin")
     CupDTO toDto(Cup cup);
 
-    @Mapping(target = "histories", ignore = true)
+    @Mapping(target = "histories", ignore = false)
     @Mapping(source = "userCupId", target = "userCup")
     Cup toEntity(CupDTO cupDTO);
 

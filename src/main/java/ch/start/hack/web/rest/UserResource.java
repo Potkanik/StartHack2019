@@ -1,12 +1,20 @@
 package ch.start.hack.web.rest;
 
 import ch.start.hack.config.Constants;
+import ch.start.hack.domain.Cup;
 import ch.start.hack.domain.User;
+import ch.start.hack.domain.enumeration.CupStatus;
+import ch.start.hack.domain.pojo.CupRequest;
+import ch.start.hack.repository.CupRepository;
 import ch.start.hack.repository.UserRepository;
 import ch.start.hack.security.AuthoritiesConstants;
+import ch.start.hack.service.CupService;
 import ch.start.hack.service.MailService;
 import ch.start.hack.service.UserService;
+import ch.start.hack.service.dto.CupDTO;
 import ch.start.hack.service.dto.UserDTO;
+import ch.start.hack.service.mapper.CupMapper;
+import ch.start.hack.service.mapper.UserMapper;
 import ch.start.hack.web.rest.errors.BadRequestAlertException;
 import ch.start.hack.web.rest.errors.EmailAlreadyUsedException;
 import ch.start.hack.web.rest.errors.LoginAlreadyUsedException;
@@ -62,15 +70,77 @@ public class UserResource {
 
     private final UserService userService;
 
+    private final CupResource cupResource;
+
+    private final CupRepository cupRepository;
+
     private final UserRepository userRepository;
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final CupMapper cupMapper;
 
+    private final UserMapper userMapper;
+
+    public UserResource(UserService userService, CupResource cupResource, CupRepository cupRepository, UserRepository userRepository, MailService mailService, CupMapper cupMapper, UserMapper userMapper) {
         this.userService = userService;
+        this.cupResource = cupResource;
+        this.cupRepository = cupRepository;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.cupMapper = cupMapper;
+        this.userMapper = userMapper;
+    }
+
+    /**
+     * POST  /users  : Creates a new user.
+     * <p>
+     * Creates a new user if the login and email are not already used, and sends an
+     * mail with an activation link.
+     * The user needs to be activated on creation.
+     *
+     * @return the ResponseEntity with status 201 (Created) and with body the new user, or with status 400 (Bad Request) if the login or email is already in use
+     * @throws URISyntaxException       if the Location URI syntax is incorrect
+     * @throws BadRequestAlertException 400 (Bad Request) if the login or email is already in use
+     */
+    @PostMapping("/users/buy-cup")
+    @Timed
+    public ResponseEntity<Cup> buyCap(@Valid @RequestBody CupRequest cupRequest) throws URISyntaxException {
+        log.debug("REST request to buy Cap : {}", cupRequest);
+
+        Optional<User> user = userRepository.findOneByLogin(cupRequest.getUserLogin());
+
+        if (user.isPresent()) {
+
+            Optional<Cup> cup = cupRepository.findCupByQrCode(cupRequest.getCupHash());
+
+            if (!cup.isPresent()) {
+                Cup newCup = new Cup();
+                newCup.setQrCode(cupRequest.getCupHash());
+                newCup.setUserCup(user.get());
+                newCup.setStatus(CupStatus.InUse);
+                CupDTO cupDto = cupResource.createCup(cupMapper.toDto(newCup)).getBody();
+//                user.get().getCups().add(cupMapper.toEntity(cupDto));
+//                updateUser(userMapper.userToUserDTO(user.get()));
+
+                return ResponseEntity.created(new URI("/api/users/buy-cup:" + cupDto.getQrCode()))
+                    .body(cupMapper.toEntity(cupDto));
+
+            } else {
+                cup.get().setStatus(CupStatus.InUse);
+                CupDTO cupDto = cupResource.updateCup(cupMapper.toDto(cup.get())).getBody();
+//                user.get().getCups().add(cupMapper.toEntity(cupDto));
+//                updateUser(userMapper.userToUserDTO(user.get()));
+
+                return ResponseEntity.created(new URI("/api/users/buy-cup:" + cupDto.getQrCode()))
+                    .body(cupMapper.toEntity(cupDto));
+            }
+        } else {
+            log.debug("Cannot find user with login: " + cupRequest.getUserLogin());
+
+            return ResponseEntity.notFound()
+                .build();
+        }
     }
 
     /**
@@ -82,7 +152,7 @@ public class UserResource {
      *
      * @param userDTO the user to create
      * @return the ResponseEntity with status 201 (Created) and with body the new user, or with status 400 (Bad Request) if the login or email is already in use
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @throws URISyntaxException       if the Location URI syntax is incorrect
      * @throws BadRequestAlertException 400 (Bad Request) if the login or email is already in use
      */
     @PostMapping("/users")
@@ -102,8 +172,36 @@ public class UserResource {
             User newUser = userService.createUser(userDTO);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
-                .headers(HeaderUtil.createAlert( "userManagement.created", newUser.getLogin()))
+                .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin()))
                 .body(newUser);
+        }
+    }
+
+    /**
+     * PUT /users : Updates an existing User.
+     *
+     * @return the ResponseEntity with status 200 (OK) and with body the updated user
+     * @throws EmailAlreadyUsedException 400 (Bad Request) if the email is already in use
+     * @throws LoginAlreadyUsedException 400 (Bad Request) if the login is already in use
+     */
+    @PutMapping("/users/return-cup")
+    @Timed
+    public ResponseEntity<Cup> returnCap(@Valid @RequestBody CupRequest cupRequest) throws URISyntaxException {
+        log.debug("REST request to return Cap : {}", cupRequest);
+
+        Optional<Cup> cup = cupRepository.findCupByQrCode(cupRequest.getCupHash());
+
+        if (cup.isPresent()) {
+            cup.get().setStatus(CupStatus.Recycled);
+            CupDTO returnedCup = cupResource.updateCup(cupMapper.toDto(cup.get())).getBody();
+
+            return ResponseEntity.created(new URI("/api/users/return-cap" + cupMapper.toEntity(returnedCup).getQrCode()))
+                .body(cupMapper.toEntity(returnedCup));
+        } else {
+            log.debug("Cannot find cup with hash: " + cupRequest.getCupHash());
+
+            return ResponseEntity.notFound()
+                .build();
         }
     }
 
@@ -185,6 +283,6 @@ public class UserResource {
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
-        return ResponseEntity.ok().headers(HeaderUtil.createAlert( "userManagement.deleted", login)).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createAlert("userManagement.deleted", login)).build();
     }
 }

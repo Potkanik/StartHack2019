@@ -3,6 +3,7 @@ package ch.start.hack.web.rest;
 import ch.start.hack.domain.History;
 import ch.start.hack.domain.enumeration.CupAction;
 import ch.start.hack.service.HistoryService;
+import ch.start.hack.service.dto.HistoryDTO;
 import ch.start.hack.service.mapper.CupMapper;
 import ch.start.hack.service.mapper.HistoryMapper;
 import com.codahale.metrics.annotation.Timed;
@@ -76,7 +77,17 @@ public class CupResource {
         history.setDate(ZonedDateTime.now());
         history.setAction(CupAction.Created);
 
-        historyService.save(historyMapper.toDto(history));
+        HistoryDTO newHistory = historyService.save(historyMapper.toDto(history));
+
+        History takenHistory = new History();
+        takenHistory.setKup(cupMapper.toEntity(result));
+        takenHistory.setDate(ZonedDateTime.now());
+        takenHistory.setAction(CupAction.Taken);
+
+        HistoryDTO newTakenHistory = historyService.save(historyMapper.toDto(takenHistory));
+
+        result.getHistories().add(historyMapper.toEntity(newHistory));
+        result.getHistories().add(historyMapper.toEntity(newTakenHistory));
 
         return ResponseEntity.created(new URI("/api/cups/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -124,12 +135,12 @@ public class CupResource {
                 break;
         }
 
-        historyService.save(historyMapper.toDto(history));
-
+        HistoryDTO newHistory = historyService.save(historyMapper.toDto(history));
+        cupDTO.getHistories().add(historyMapper.toEntity(newHistory));
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, cupDTO.getId().toString()))
-            .body(result);
+            .body(cupDTO);
     }
 
     /**

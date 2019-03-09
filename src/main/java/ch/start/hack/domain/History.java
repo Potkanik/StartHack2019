@@ -1,5 +1,6 @@
 package ch.start.hack.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -32,7 +33,7 @@ public class History implements Serializable {
     private ZonedDateTime date;
 
     @ManyToOne
-    @JsonIgnoreProperties("histories")
+    @JsonIgnore
     private Cup kup;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
