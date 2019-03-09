@@ -1,0 +1,11 @@
+{
+    "startHack2019App": {
+        "CupStatus": {
+            "null": "",
+            "InStore": "InStore",
+            "InUse": "InUse",
+            "Recycled": "Recycled",
+            "Lost": "Lost"
+        }
+    }
+}

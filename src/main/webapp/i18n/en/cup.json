@@ -1,0 +1,24 @@
+{
+    "startHack2019App": {
+        "cup": {
+            "home": {
+                "title": "Cups",
+                "createLabel": "Create a new Cup",
+                "createOrEditLabel": "Create or edit a Cup"
+            },
+            "created": "A new Cup is created with identifier {{ param }}",
+            "updated": "A Cup is updated with identifier {{ param }}",
+            "deleted": "A Cup is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Cup {{ id }}?"
+            },
+            "detail": {
+                "title": "Cup"
+            },
+            "qrCode": "Qr Code",
+            "status": "Status",
+            "history": "History",
+            "userCup": "User Cup"
+        }
+    }
+}

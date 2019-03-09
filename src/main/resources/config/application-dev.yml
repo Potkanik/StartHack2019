@@ -44,7 +44,7 @@ spring:
             indent-output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:file:./target/h2db/db/starthack2019;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:file:/home/jardo/h2db/db/starthack2019;DB_CLOSE_DELAY=-1
         username: StartHack2019
         password:
         hikari:

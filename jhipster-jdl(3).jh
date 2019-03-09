@@ -1,5 +1,4 @@
 entity History {
-Cup Cup ,
 Action CupAction ,
 Date ZonedDateTime
 }
@@ -14,9 +13,12 @@ InStore, InUse, Recycled, Lost
 
 entity Cup {
 QrCode String,
-Status CupStatus,
-History String
+Status CupStatus
 } 
+
+relationship ManyToOne {
+  History{kup} to Cup{history}
+}
 
 service all with serviceImpl
 paginate * with infinite-scroll

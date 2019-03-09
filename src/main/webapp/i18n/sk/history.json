@@ -1,0 +1,23 @@
+{
+    "startHack2019App": {
+        "history": {
+            "home": {
+                "title": "Histories",
+                "createLabel": "Pridať History",
+                "createOrEditLabel": "Pridať alebo upraviť History"
+            },
+            "created": "Bol vytvorený potomok entity History s identifikátorom {{ param }}",
+            "updated": "Potomok entity History s identifikátorom {{ param }} bol upravený.",
+            "deleted": "Potomok entity History s identifikátorom {{ param }} bol vymazaný.",
+            "delete": {
+                "question": "Ste si istý, že chcete vymazať History {{ id }}?"
+            },
+            "detail": {
+                "title": "History"
+            },
+            "action": "Action",
+            "date": "Date",
+            "kup": "Kup"
+        }
+    }
+}

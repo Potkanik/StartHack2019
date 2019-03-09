@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-cup-heading" jhiTranslate="startHack2019App.cup.home.createOrEditLabel">Create or edit a Cup</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!cup.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="cup.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="startHack2019App.cup.qrCode" for="field_qrCode">Qr Code</label>
+                    <input type="text" class="form-control" name="qrCode" id="field_qrCode"
+                        [(ngModel)]="cup.qrCode" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="startHack2019App.cup.status" for="field_status">Status</label>
+                    <select class="form-control" name="status" [(ngModel)]="cup.status" id="field_status" >
+                        <option value="InStore">{{'startHack2019App.CupStatus.InStore' | translate}}</option>
+                        <option value="InUse">{{'startHack2019App.CupStatus.InUse' | translate}}</option>
+                        <option value="Recycled">{{'startHack2019App.CupStatus.Recycled' | translate}}</option>
+                        <option value="Lost">{{'startHack2019App.CupStatus.Lost' | translate}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="startHack2019App.cup.userCup" for="field_userCup">User Cup</label>
+                    <select class="form-control" id="field_userCup" name="userCup" [(ngModel)]="cup.userCupId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

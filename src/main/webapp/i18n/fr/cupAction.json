@@ -1,0 +1,11 @@
+{
+    "startHack2019App": {
+        "CupAction": {
+            "null": "",
+            "Created": "Created",
+            "Taken": "Taken",
+            "Returned": "Returned",
+            "Lost": "Lost"
+        }
+    }
+}

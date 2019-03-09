@@ -1,0 +1,38 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "history",
+            "otherEntityName": "history",
+            "otherEntityRelationshipName": "kup"
+        },
+        {
+            "relationshipName": "userCup",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "cup"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "qrCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "CupStatus",
+            "fieldValues": "InStore,InUse,Recycled,Lost"
+        }
+    ],
+    "changelogDate": "20190309000204",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "cup",
+    "jpaMetamodelFiltering": false,
+    "pagination": "infinite-scroll"
+}

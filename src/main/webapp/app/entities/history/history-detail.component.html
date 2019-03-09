@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="history">
+            <h2><span jhiTranslate="startHack2019App.history.detail.title">History</span> {{history.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="startHack2019App.history.action">Action</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'startHack2019App.CupAction.' + history.action}}">{{history.action}}</span>
+                </dd>
+                <dt><span jhiTranslate="startHack2019App.history.date">Date</span></dt>
+                <dd>
+                    <span>{{history.date}}</span>
+                </dd>
+                <dt><span jhiTranslate="startHack2019App.history.kup">Kup</span></dt>
+                <dd>
+                    <div *ngIf="history.kupId">
+                        <a [routerLink]="['/cup', history.kupId, 'view']">{{history.kupId}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/history', history.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

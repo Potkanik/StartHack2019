@@ -1,0 +1,24 @@
+{
+    "startHack2019App": {
+        "cup": {
+            "home": {
+                "title": "Cups",
+                "createLabel": "Créer un nouveau Cup",
+                "createOrEditLabel": "Créer ou éditer un Cup"
+            },
+            "created": "Un nouveau Cup a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Cup avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Cup avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Cup {{ id }} ?"
+            },
+            "detail": {
+                "title": "Cup"
+            },
+            "qrCode": "Qr Code",
+            "status": "Status",
+            "history": "History",
+            "userCup": "User Cup"
+        }
+    }
+}

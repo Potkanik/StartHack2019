@@ -1,0 +1,31 @@
+{
+    "name": "History",
+    "fields": [
+        {
+            "fieldName": "action",
+            "fieldType": "CupAction",
+            "fieldValues": "Created,Taken,Returned,Lost"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "kup",
+            "otherEntityName": "cup",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190309000203",
+    "entityTableName": "history",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

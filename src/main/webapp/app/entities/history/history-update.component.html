@@ -1,0 +1,47 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-history-heading" jhiTranslate="startHack2019App.history.home.createOrEditLabel">Create or edit a History</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!history.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="history.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="startHack2019App.history.action" for="field_action">Action</label>
+                    <select class="form-control" name="action" [(ngModel)]="history.action" id="field_action" >
+                        <option value="Created">{{'startHack2019App.CupAction.Created' | translate}}</option>
+                        <option value="Taken">{{'startHack2019App.CupAction.Taken' | translate}}</option>
+                        <option value="Returned">{{'startHack2019App.CupAction.Returned' | translate}}</option>
+                        <option value="Lost">{{'startHack2019App.CupAction.Lost' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="startHack2019App.history.date" for="field_date">Date</label>
+                    <div class="d-flex">
+                        <input id="field_date" type="datetime-local" class="form-control" name="date" [(ngModel)]="date"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="startHack2019App.history.kup" for="field_kup">Kup</label>
+                    <select class="form-control" id="field_kup" name="kup" [(ngModel)]="history.kupId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="cupOption.id" *ngFor="let cupOption of cups; trackBy: trackCupById">{{cupOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
