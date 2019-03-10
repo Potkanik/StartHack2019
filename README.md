@@ -1,4 +1,4 @@
-()[logo.png]
+![][logo.png]
 
 # StartHack2019
 This application was generated using JHipster 5.7.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.7.0](https://www.jhipster.tech/documentation-archive/v5.7.0).
