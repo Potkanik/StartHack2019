@@ -3,6 +3,7 @@ package ch.start.hack.web.rest;
 import ch.start.hack.config.Constants;
 import ch.start.hack.config.DataEvent;
 import ch.start.hack.domain.Cup;
+import ch.start.hack.domain.History;
 import ch.start.hack.domain.User;
 import ch.start.hack.domain.enumeration.CupAction;
 import ch.start.hack.domain.enumeration.CupStatus;
@@ -377,21 +378,41 @@ public class UserResource {
             finalViewData.setName(u.getFirstName());
             finalViewData.setMoney(50);
 
-            Integer returnedCups = 0;
+            int returnedCups = 0;
             for (Cup c : u.getCups()) {
                 returnedCups += c.getHistories().stream().filter(h -> h.getAction() == CupAction.Returned).collect(Collectors.toList()).size();
             }
 
             finalViewData.setCountOfReturnedCups(returnedCups);
+
             finalViewData.setCountOfCups(u.getCups().size());
 
-            Integer returnedByOthersCups = 0;
+            int returnedByOthersCups = 0;
             for (Cup c : u.getCups()) {
                 returnedByOthersCups += c.getHistories().stream().filter(h -> h.getAction() == CupAction.ReturnedByOther).collect(Collectors.toList()).size();
             }
 
             finalViewData.setCountOfReturnedCupsByOthers(returnedByOthersCups);
             finalViewDatas.add(finalViewData);
+        });
+
+        List<Cup> cups = cupRepository.findAll();
+
+        List<History> histories = new ArrayList<>();
+
+        cups.forEach(c -> {
+            History history = historyRepository.findTopByKupOrderByDate(c).get();
+            histories.add(history);
+        });
+
+        Long[] charValues = new Long[3];
+
+        charValues[0] = histories.stream().filter(h -> h.getKup().getStatus() == CupStatus.InUse).count();
+        charValues[1] = histories.stream().filter(h -> h.getKup().getStatus() == CupStatus.Recycled).count();
+        charValues[2] = histories.stream().filter(h -> h.getKup().getStatus() == CupStatus.ReturnedByOther).count();
+
+        finalViewDatas.forEach(f -> {
+            f.setChartValues(charValues);
         });
 
         return ResponseEntity.created(new URI("/users/final-view"))

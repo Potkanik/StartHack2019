@@ -1,6 +1,7 @@
 package ch.start.hack.domain.pojo;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class FinalViewData implements Serializable {
@@ -11,6 +12,7 @@ public class FinalViewData implements Serializable {
     public Integer countOfCups;
     public Integer countOfReturnedCups;
     public Integer countOfReturnedCupsByOthers;
+    public Long[] chartValues;
 
     public Integer getId() {
         return id;
@@ -60,6 +62,14 @@ public class FinalViewData implements Serializable {
         this.countOfReturnedCupsByOthers = countOfReturnedCupsByOthers;
     }
 
+    public Long[] getChartValues() {
+        return chartValues;
+    }
+
+    public void setChartValues(Long[] chartValues) {
+        this.chartValues = chartValues;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,6 +97,7 @@ public class FinalViewData implements Serializable {
             ", countOfCups=" + countOfCups +
             ", countOfReturnedCups=" + countOfReturnedCups +
             ", countOfReturnedCupsByOthers=" + countOfReturnedCupsByOthers +
+            ", chartValues=" + Arrays.toString(chartValues) +
             '}';
     }
 }

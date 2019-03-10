@@ -18,8 +18,8 @@ export class FinalViewComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     source = interval(700);
 
-    public pieChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
-    public pieChartData = [120, 150, 180, 90];
+    public pieChartLabels = ['InUse', 'Recycled', 'ReturnedByOther'];
+    public pieChartData = [120, 150, 180];
     public pieChartType = 'pie';
 
     constructor(
@@ -28,13 +28,14 @@ export class FinalViewComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private principal: Principal
     ) {
-        this.subscription = this.source.subscribe(val => this.ngOnInit());
+        this.subscription = this.source.subscribe(val => this.loadAll());
     }
 
     loadAll() {
         this.finalViewService.query().subscribe(
             (res: HttpResponse<IFinalView[]>) => {
                 this.finalViews = res.body;
+                this.pieChartData = res.body[0].chartValues;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );

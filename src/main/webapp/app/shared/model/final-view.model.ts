@@ -5,6 +5,7 @@ export interface IFinalView {
     countOfCups?: number;
     countOfReturnedCups?: number;
     countOfReturnedCupsByOthers?: number;
+    chartValues?: number[];
 }
 
 export class FinalView implements IFinalView {
@@ -14,6 +15,7 @@ export class FinalView implements IFinalView {
         public money?: number,
         public countOfCups?: number,
         public countOfReturnedCups?: number,
-        public countOfReturnedCupsByOthers?: number
+        public countOfReturnedCupsByOthers?: number,
+        public chartValues?: number[]
     ) {}
 }
