@@ -1,0 +1,77 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="startHack2019App.finalView.home.title">Final Views</span>
+        <!--<button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-final-view" [routerLink]="['/final-view/new']">-->
+        <!--<fa-icon [icon]="'plus'"></fa-icon>-->
+        <!--<span  jhiTranslate="startHack2019App.finalView.home.createLabel">-->
+        <!--Create new Final View-->
+        <!--</span>-->
+        <!--</button>-->
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="div">
+        <div *ngIf="finalViews" class="table-responsive float-left" style="width:65%">
+            <!--class="table table-striped float-left"-->
+            <table class="table-striped table">
+                <thead>
+                <tr>
+                    <!--<th><span jhiTranslate="global.field.id">ID</span></th>-->
+                    <th><span jhiTranslate="startHack2019App.finalView.name">Name</span></th>
+                    <th><span jhiTranslate="startHack2019App.finalView.money">Money</span></th>
+                    <th><span jhiTranslate="startHack2019App.finalView.countOfCups">Count Of Cups</span></th>
+                    <th><span
+                        jhiTranslate="startHack2019App.finalView.countOfReturnedCups">Count Of Returned Cups</span></th>
+                    <th><span jhiTranslate="startHack2019App.finalView.countOfReturnedCupsByOthers">Count Of Returned Cups By Others</span>
+                    </th>
+                    <!--<th></th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let finalView of finalViews ;trackBy: trackId">
+                    <!--<td>{{finalView.id}}</td>-->
+                    <td><b>{{finalView.name}}</b></td>
+                    <td><b>{{finalView.money}}</b></td>
+                    <td><b>{{finalView.countOfCups}}</b></td>
+                    <td><b>{{finalView.countOfReturnedCups}}</b></td>
+                    <td><b>{{finalView.countOfReturnedCupsByOthers}}</b></td>
+                    <!--<td class="text-right">-->
+                    <!--<div class="btn-group flex-btn-group-container">-->
+                    <!--<button type="submit"-->
+                    <!--[routerLink]="['/final-view', finalView.id, 'view' ]"-->
+                    <!--class="btn btn-info btn-sm">-->
+                    <!--<fa-icon [icon]="'eye'"></fa-icon>-->
+                    <!--<span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>-->
+                    <!--</button>-->
+                    <!--<button type="submit"-->
+                    <!--[routerLink]="['/final-view', finalView.id, 'edit']"-->
+                    <!--class="btn btn-primary btn-sm">-->
+                    <!--<fa-icon [icon]="'pencil-alt'"></fa-icon>-->
+                    <!--<span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>-->
+                    <!--</button>-->
+                    <!--<button type="submit"-->
+                    <!--[routerLink]="['/', { outlets: { popup: 'final-view/'+ finalView.id + '/delete'} }]"-->
+                    <!--replaceUrl="true"-->
+                    <!--queryParamsHandling="merge"-->
+                    <!--class="btn btn-danger btn-sm">-->
+                    <!--<fa-icon [icon]="'times'"></fa-icon>-->
+                    <!--<span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>-->
+                    <!--</button>-->
+                    <!--</div>-->
+                    <!--</td>-->
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="float-right" style="width: 35%">
+            <div style="text-align: center;">
+                <canvas [chartType]="pieChartType"
+                        [data]="pieChartData"
+                        [labels]="pieChartLabels"
+                        baseChart></canvas>
+            </div>
+
+        </div>
+    </div>
+</div>

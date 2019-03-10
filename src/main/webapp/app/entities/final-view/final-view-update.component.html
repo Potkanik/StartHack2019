@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form #editForm="ngForm" (ngSubmit)="save()" name="editForm" novalidate role="form">
+            <h2 id="jhi-final-view-heading" jhiTranslate="startHack2019App.finalView.home.createOrEditLabel">Create or
+                edit a Final View</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div [hidden]="!finalView.id" class="form-group">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input [(ngModel)]="finalView.id" class="form-control" id="id" name="id"
+                           readonly type="text"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name" jhiTranslate="startHack2019App.finalView.name">Name</label>
+                    <input [(ngModel)]="finalView.name" class="form-control" id="field_name" maxlength="100"
+                           name="name" type="text"/>
+                    <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
+                        <small [hidden]="!editForm.controls.name?.errors?.maxlength"
+                               class="form-text text-danger" jhiTranslate="entity.validation.maxlength"
+                               translateValues="{ max: 100 }">
+                            This field cannot be longer than 100 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_money" jhiTranslate="startHack2019App.finalView.money">Money</label>
+                    <input [(ngModel)]="finalView.money" class="form-control" id="field_money" name="money"
+                           type="number"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_countOfCups"
+                           jhiTranslate="startHack2019App.finalView.countOfCups">Count Of Cups</label>
+                    <input [(ngModel)]="finalView.countOfCups" class="form-control" id="field_countOfCups"
+                           name="countOfCups"
+                           type="number"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_countOfReturnedCups"
+                           jhiTranslate="startHack2019App.finalView.countOfReturnedCups">Count Of Returned Cups</label>
+                    <input [(ngModel)]="finalView.countOfReturnedCups" class="form-control"
+                           id="field_countOfReturnedCups" name="countOfReturnedCups"
+                           type="number"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_countOfReturnedCupsByOthers"
+                           jhiTranslate="startHack2019App.finalView.countOfReturnedCupsByOthers">Count Of Returned Cups
+                        By Others</label>
+                    <input [(ngModel)]="finalView.countOfReturnedCupsByOthers" class="form-control"
+                           id="field_countOfReturnedCupsByOthers" name="countOfReturnedCupsByOthers"
+                           type="number"/>
+                </div>
+
+            </div>
+            <div>
+                <button (click)="previousState()" class="btn btn-secondary" id="cancel-save" type="button">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary" id="save-entity"
+                        type="submit">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

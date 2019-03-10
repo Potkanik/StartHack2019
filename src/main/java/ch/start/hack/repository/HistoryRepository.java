@@ -15,4 +15,6 @@ import java.util.Optional;
 @Repository
 public interface HistoryRepository extends JpaRepository<History, Long> {
     Optional<History> findHistoryByKup(Cup cup);
+
+    Optional<History> findTopByKupOrderByDate(Cup cup);
 }

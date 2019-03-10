@@ -41,6 +41,13 @@
                             <span jhiTranslate="global.menu.entities.cup">Cup</span>
                         </a>
                     </li>
+                    <li>
+                        <a (click)="collapseNavbar()" [routerLinkActiveOptions]="{ exact: true }" class="dropdown-item"
+                           routerLink="final-view" routerLinkActive="active">
+                            <fa-icon fixedWidth="true" icon="asterisk"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.finalView">Final View</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>

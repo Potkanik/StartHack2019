@@ -55,6 +55,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "money")
     private Integer money;
 
+    @Size(max = 100)
+    @Column(name = "card_hash")
+    private String cardHash;
+
     @Email
     @Size(min = 5, max = 254)
     @Column(length = 254, unique = true)
@@ -98,6 +102,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "userCup", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Cup> cups = new HashSet<>();
+
+    public String getCardHash() {
+        return cardHash;
+    }
+
+    public void setCardHash(String cardHash) {
+        this.cardHash = cardHash;
+    }
 
     public Integer getMoney() {
         return money;
@@ -257,6 +269,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", money=" + money +
+            ", cardHash='" + cardHash + '\'' +
             ", email='" + email + '\'' +
             ", activated=" + activated +
             ", langKey='" + langKey + '\'' +

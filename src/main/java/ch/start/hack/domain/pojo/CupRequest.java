@@ -4,16 +4,16 @@ import java.util.Objects;
 
 public class CupRequest {
 
-    private String userLogin;
+    private String userHash;
 
     private String cupHash;
 
-    public String getUserLogin() {
-        return userLogin;
+    public String getCardHash() {
+        return userHash;
     }
 
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
+    public void setUserHash(String userHash) {
+        this.userHash = userHash;
     }
 
     public String getCupHash() {
@@ -29,19 +29,19 @@ public class CupRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CupRequest that = (CupRequest) o;
-        return Objects.equals(userLogin, that.userLogin) &&
+        return Objects.equals(userHash, that.userHash) &&
             Objects.equals(cupHash, that.cupHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userLogin, cupHash);
+        return Objects.hash(userHash, cupHash);
     }
 
     @Override
     public String toString() {
         return "CupRequest{" +
-            "userLogin='" + userLogin + '\'' +
+            "userHash='" + userHash + '\'' +
             ", cupHash='" + cupHash + '\'' +
             '}';
     }

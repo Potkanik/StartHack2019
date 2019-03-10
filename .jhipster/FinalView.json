@@ -1,0 +1,40 @@
+{
+    "name": "FinalView",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 100
+        },
+        {
+            "fieldName": "money",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "countOfCups",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "countOfReturnedCups",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "countOfReturnedCupsByOthers",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190309214954",
+    "entityTableName": "final_view",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "skipServer": true
+}
