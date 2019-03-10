@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             doAsync {
                 val postRet = post(
                         "http://130.82.238.197:8080/api/users/buy-cup",
-                        json = (mapOf("userLogin" to user, "cupHash" to local_hash)))
+                        json = (mapOf("userHash" to user, "cupHash" to local_hash)))
                 uiThread {
                     logMessage("POST", postRet.text)
                     Mytv.tvresult!!.text = DEFAULT_FIELD

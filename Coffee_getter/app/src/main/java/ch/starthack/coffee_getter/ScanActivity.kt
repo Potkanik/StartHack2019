@@ -7,6 +7,7 @@ import android.media.ToneGenerator
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.google.zxing.Result
 import khttp.put
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -68,7 +69,7 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                 longToast("Sending login")
                 put(
                     "http://130.82.238.197:8080/api/users/return-cup",
-                    json = mapOf("userLogin" to localId, "cupHash" to cupHash))
+                    json = mapOf("userHash" to localId, "cupHash" to cupHash))
             } else{
                 longToast("NOT sending login")
                 put(
@@ -77,10 +78,11 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                 )
             }
             uiThread {
-                longToast("POSTED" + postRet.text)
+                longToast("Deposit correctly returned!")
                 idScanned = DEFAULT_FIELD
             }
         }
+        Thread.sleep(1500)
         // If you would like to resume scanning, call this method below:
         mScannerView!!.resumeCameraPreview(this)
     }
