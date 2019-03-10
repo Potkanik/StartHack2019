@@ -1,10 +1,13 @@
 package ch.start.hack.web.rest;
 
 import ch.start.hack.config.Constants;
+import ch.start.hack.config.DataEvent;
 import ch.start.hack.domain.Cup;
 import ch.start.hack.domain.User;
+import ch.start.hack.domain.enumeration.CupAction;
 import ch.start.hack.domain.enumeration.CupStatus;
 import ch.start.hack.domain.pojo.CupRequest;
+import ch.start.hack.domain.pojo.FinalViewData;
 import ch.start.hack.repository.CupRepository;
 import ch.start.hack.repository.HistoryRepository;
 import ch.start.hack.repository.UserRepository;
@@ -35,8 +38,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing users.
@@ -86,6 +91,8 @@ public class UserResource {
 
     private final Integer coffePrice = 2;
 
+    private final List<DataEvent> dataEventList = new ArrayList<>();
+
     public UserResource(UserService userService, CupResource cupResource, CupRepository cupRepository, UserRepository userRepository, HistoryRepository historyRepository, MailService mailService, CupMapper cupMapper, UserMapper userMapper) {
         this.userService = userService;
         this.cupResource = cupResource;
@@ -113,7 +120,7 @@ public class UserResource {
     public ResponseEntity<Cup> buyCap(@Valid @RequestBody CupRequest cupRequest) throws URISyntaxException {
         log.debug("REST request to buy Cap : {}", cupRequest);
 
-        Optional<User> user = userRepository.findOneByLogin(cupRequest.getUserLogin());
+        Optional<User> user = userRepository.findOneByCardHashContains(cupRequest.getCardHash());
 
         if (user.isPresent()) {
 
@@ -147,7 +154,7 @@ public class UserResource {
                     .body(cupMapper.toEntity(cupDto));
             }
         } else {
-            log.debug("Cannot find user with login: " + cupRequest.getUserLogin());
+            log.debug("Cannot find user with login: " + cupRequest.getCardHash());
 
             return ResponseEntity.notFound()
                 .build();
@@ -200,44 +207,73 @@ public class UserResource {
     public ResponseEntity<Cup> returnCap(@Valid @RequestBody CupRequest cupRequest) throws URISyntaxException {
         log.debug("REST request to return Cap : {}", cupRequest);
 
-        Optional<Cup> cup = cupRepository.findCupByQrCode(cupRequest.getCupHash());
+        boolean returnedBySameUser = true;
 
-        Optional<User> user;
+        if (cupRequest.getCupHash() != null) {
 
-        if (cupRequest.getUserLogin() != null) {
-            user = userRepository.findOneByLogin(cup.get().getUserCup().getLogin());
+            Optional<Cup> cup = cupRepository.findCupByQrCode(cupRequest.getCupHash());
 
-            if (!user.get().getLogin().equals(cupRequest.getUserLogin())) {
-                User foreignUser = userRepository.findOneByLogin(cupRequest.getUserLogin()).get();
-                foreignUser.increaseMoney(1);
-                user.get().decreaseMoney(1);
+            Optional<User> user;
 
-                userRepository.save(foreignUser);
-                userRepository.save(user.get());
+            if (cupRequest.getCardHash() != null && cup.isPresent()) {
+                user = userRepository.findOneByLogin(cup.get().getUserCup().getLogin());
 
-                // TODO: Create event to FE
+                if (!user.get().getCardHash().equals(cupRequest.getCardHash())) {
+                    returnedBySameUser = false;
+                    User foreignUser = userRepository.findOneByCardHashContains(cupRequest.getCardHash()).get();
+                    foreignUser.increaseMoney(1);
+                    user.get().decreaseMoney(1);
+
+                    userRepository.save(foreignUser);
+                    userRepository.save(user.get());
+
+                    // TODO: Create event to FE
+
+                }
 
             }
-
-        }
 //        else {
 //            user = userRepository.findById(cup.get().getUserCup().getId());
 //        }
 
 
+            if (cup.isPresent()) {
+                if (!returnedBySameUser) {
+                    cup.get().setStatus(CupStatus.ReturnedByOther);
+                } else {
+                    cup.get().setStatus(CupStatus.Recycled);
+                }
+                CupDTO returnedCup = cupResource.updateCup(cupMapper.toDto(cup.get())).getBody();
 
-        if (cup.isPresent()) {
-            cup.get().setStatus(CupStatus.Recycled);
-            CupDTO returnedCup = cupResource.updateCup(cupMapper.toDto(cup.get())).getBody();
+                return ResponseEntity.created(new URI("/api/users/return-cap" + cupMapper.toEntity(returnedCup).getQrCode()))
+                    .body(cupMapper.toEntity(returnedCup));
+            } else {
+                log.debug("Cannot find cup with hash: " + cupRequest.getCupHash());
 
-            return ResponseEntity.created(new URI("/api/users/return-cap" + cupMapper.toEntity(returnedCup).getQrCode()))
-                .body(cupMapper.toEntity(returnedCup));
-        } else {
-            log.debug("Cannot find cup with hash: " + cupRequest.getCupHash());
-
-            return ResponseEntity.notFound()
-                .build();
+                return ResponseEntity.notFound()
+                    .build();
+            }
         }
+
+        return ResponseEntity.notFound()
+            .build();
+    }
+
+    /**
+     * PUT /users : Updates an existing User.
+     *
+     * @return the ResponseEntity with status 200 (OK) and with body the updated user
+     * @throws EmailAlreadyUsedException 400 (Bad Request) if the email is already in use
+     * @throws LoginAlreadyUsedException 400 (Bad Request) if the login is already in use
+     */
+    @GetMapping("/users/return-cup")
+    @Timed
+    public ResponseEntity<List<DataEvent>> getAllEventData() throws URISyntaxException {
+
+        List<DataEvent> dataEvents = new ArrayList<>();
+
+        return ResponseEntity.created(new URI("/api/users/return-cup"))
+            .body(dataEvents);
     }
 
     /**
@@ -319,5 +355,46 @@ public class UserResource {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity.ok().headers(HeaderUtil.createAlert("userManagement.deleted", login)).build();
+    }
+
+    /**
+     * GET /users/:login : get the "login" user.
+     *
+     * @return the ResponseEntity with status 200 (OK) and with body the "login" user, or with status 404 (Not Found)
+     */
+    @GetMapping("/users/final-view")
+    @Timed
+    public ResponseEntity<List<FinalViewData>> getFinalViewData() throws URISyntaxException {
+        log.debug("REST request to get all final view data");
+
+        List<User> users = userRepository.findAll().stream().filter(u -> u.getId() > 1000).collect(Collectors.toList());
+
+        List<FinalViewData> finalViewDatas = new ArrayList<>();
+
+        users.forEach(u -> {
+            FinalViewData finalViewData = new FinalViewData();
+            finalViewData.setId(Math.toIntExact(u.getId()));
+            finalViewData.setName(u.getFirstName());
+            finalViewData.setMoney(50);
+
+            Integer returnedCups = 0;
+            for (Cup c : u.getCups()) {
+                returnedCups += c.getHistories().stream().filter(h -> h.getAction() == CupAction.Returned).collect(Collectors.toList()).size();
+            }
+
+            finalViewData.setCountOfReturnedCups(returnedCups);
+            finalViewData.setCountOfCups(u.getCups().size());
+
+            Integer returnedByOthersCups = 0;
+            for (Cup c : u.getCups()) {
+                returnedByOthersCups += c.getHistories().stream().filter(h -> h.getAction() == CupAction.ReturnedByOther).collect(Collectors.toList()).size();
+            }
+
+            finalViewData.setCountOfReturnedCupsByOthers(returnedByOthersCups);
+            finalViewDatas.add(finalViewData);
+        });
+
+        return ResponseEntity.created(new URI("/users/final-view"))
+            .body(finalViewDatas);
     }
 }

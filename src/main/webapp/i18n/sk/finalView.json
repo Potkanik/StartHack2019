@@ -1,0 +1,25 @@
+{
+    "startHack2019App": {
+        "finalView": {
+            "home": {
+                "title": "Final Views",
+                "createLabel": "Pridať Final View",
+                "createOrEditLabel": "Pridať alebo upraviť Final View"
+            },
+            "created": "Bol vytvorený potomok entity Final View s identifikátorom {{ param }}",
+            "updated": "Potomok entity Final View s identifikátorom {{ param }} bol upravený.",
+            "deleted": "Potomok entity Final View s identifikátorom {{ param }} bol vymazaný.",
+            "delete": {
+                "question": "Ste si istý, že chcete vymazať Final View {{ id }}?"
+            },
+            "detail": {
+                "title": "Final View"
+            },
+            "name": "Name",
+            "money": "Money",
+            "countOfCups": "Count Of Cups",
+            "countOfReturnedCups": "Count Of Returned Cups",
+            "countOfReturnedCupsByOthers": "Count Of Returned Cups By Others"
+        }
+    }
+}

@@ -2,29 +2,27 @@ package ch.start.hack.web.rest;
 
 import ch.start.hack.domain.History;
 import ch.start.hack.domain.enumeration.CupAction;
+import ch.start.hack.service.CupService;
 import ch.start.hack.service.HistoryService;
+import ch.start.hack.service.dto.CupDTO;
 import ch.start.hack.service.dto.HistoryDTO;
 import ch.start.hack.service.mapper.CupMapper;
 import ch.start.hack.service.mapper.HistoryMapper;
-import com.codahale.metrics.annotation.Timed;
-import ch.start.hack.service.CupService;
 import ch.start.hack.web.rest.errors.BadRequestAlertException;
 import ch.start.hack.web.rest.util.HeaderUtil;
 import ch.start.hack.web.rest.util.PaginationUtil;
-import ch.start.hack.service.dto.CupDTO;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -126,6 +124,9 @@ public class CupResource {
                 break;
             case Recycled:
                 history.setAction(CupAction.Returned);
+                break;
+            case ReturnedByOther:
+                history.setAction(CupAction.ReturnedByOther);
                 break;
             case Lost:
                 history.setAction(CupAction.Lost);

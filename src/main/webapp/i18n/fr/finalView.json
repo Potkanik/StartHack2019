@@ -1,0 +1,25 @@
+{
+    "startHack2019App": {
+        "finalView": {
+            "home": {
+                "title": "FinalViews",
+                "createLabel": "Créer un nouveau Final View",
+                "createOrEditLabel": "Créer ou éditer un Final View"
+            },
+            "created": "Un nouveau Final View a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Final View avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Final View avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Final View {{ id }} ?"
+            },
+            "detail": {
+                "title": "Final View"
+            },
+            "name": "Name",
+            "money": "Money",
+            "countOfCups": "Count Of Cups",
+            "countOfReturnedCups": "Count Of Returned Cups",
+            "countOfReturnedCupsByOthers": "Count Of Returned Cups By Others"
+        }
+    }
+}

@@ -1,5 +1,8 @@
-id;login;password_hash;first_name;last_name;money;email;image_url;activated;lang_key;created_by;last_modified_by
-1;system;$2a$10$mE.qmcV0mFU5NcKh73TZx.z4ueI/.bDWbj0T1BYyqP481kGGarKLG;System;System;500;system@localhost;;true;en;system;system
-2;anonymoususer;$2a$10$j8S5d7Sr7.8VTOYNviDPOeWX8KcYILUVJBsYV83Y5NtECayypx9lO;Anonymous;User;100;anonymous@localhost;;true;en;system;system
-3;admin;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Administrator;Administrator;100;admin@localhost;;true;en;system;system
-4;user;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;User;User;500;user@localhost;;true;en;system;system
+id;login;password_hash;first_name;last_name;money;card_hash;email;image_url;activated;lang_key;created_by;last_modified_by
+1;system;$2a$10$mE.qmcV0mFU5NcKh73TZx.z4ueI/.bDWbj0T1BYyqP481kGGarKLG;System;System;500;;system@localhost;;true;en;system;system
+2;anonymoususer;$2a$10$j8S5d7Sr7.8VTOYNviDPOeWX8KcYILUVJBsYV83Y5NtECayypx9lO;Anonymous;User;100;;anonymous@localhost;;true;en;system;system
+3;admin;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Administrator;Administrator;100;;admin@localhost;;true;en;system;system
+4;user;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;User;User;500;;user@localhost;;true;en;system;system
+1001;matthieu;$2a$10$gyLcIpatritefBGAxK08l.3L445CjXjeOCBlAYVho.zbVWyUetfRC;Matthieu;Devaux;30;34f86d42;matthieu.devaux@starthack.ch;;true;fr;admin;admin
+1002;olivier;$2a$10$o4Vv7HSaYj1a9sSzyn2M0ucfgZoVeQr6V94I9sv0oUBvTiV0gK/8W;Olivier;Cloux;50;703e9                                                        ,dad08fad;olivier.cloux@starthack.ch;;true;en;admin;admin
+1003;jaroslav;$2a$10$DUe8FwnFjWFHtzvxS86xA.RiiUgb100ZfkokZh2BRNnKh8vqRPSM2;Jaroslav;Sochan;10;a92271fc;jaroslav.sochan@starthack.ch;;true;sk;admin;admin
