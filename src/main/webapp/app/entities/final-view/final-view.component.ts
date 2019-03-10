@@ -16,7 +16,7 @@ export class FinalViewComponent implements OnInit, OnDestroy {
     currentAccount: any;
     eventSubscriber: Subscription;
     subscription: Subscription;
-    source = interval(700);
+    source = interval(1000);
 
     public pieChartLabels = ['InUse', 'Recycled', 'ReturnedByOther'];
     public pieChartData = [120, 150, 180];
